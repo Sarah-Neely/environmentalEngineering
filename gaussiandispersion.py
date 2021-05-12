@@ -15,25 +15,36 @@ respectively."""
 import math
 
 
-class pollutionconcentration:
+class SmokeStack:
 
-    def __init__(self, emissionrate, windspeed, distancedownwind, horizontaldistance, verticalheight, stackheight,
-                 plumerise, horizontaldispersion, verticaldispersion):
-        self.Q = emissionrate
-        self.u = windspeed
-        self.x = distancedownwind
-        self.y = horizontaldistance
-        self.z = verticalheight
-        self.h = stackheight + plumerise
-        self.sy = horizontaldispersion
-        self.sz = verticaldispersion
+    def __init__(self, emission_rate, wind_speed, distance_downwind, horizontal_distance, vertical_height, stack_height,
+                 plume_rise, horizontal_dispersion, vertical_dispersion):
+        self.q = emission_rate
+        self.u = wind_speed
+        self.x = distance_downwind
+        self.y = horizontal_distance
+        self.z = vertical_height
+        self.h = stack_height + plume_rise
+        self.sy = horizontal_dispersion
+        self.sz = vertical_dispersion
 
-    def steadystateconcentration(self, Q, u, y, z, h, sy, sz):
-        concentration = (Q / (2 * math.pi * u * sy * sz)) * math.exp((-1 / 2) * ((y * y) / (sy * sy))) * (
+    @classmethod
+    def new_stack(cls, q, u, y, z, h, sy, sz):
+        return cls(Q, u, y, z, h, sy, sz)
+
+    @staticmethod
+    def steady_state_concentration(q, u, y, z, h, sy, sz):
+        concentration = (q / (2 * math.pi * u * sy * sz)) * math.exp((-0.5) * ((y * y) / (sy * sy))) * (
                 math.exp((-0.5) * (((z - h) * (z - h)) / (sz * sz))) +
                 math.exp((-0.5) * ((z + h) * (z + h)) / (sz * sz)))
         return concentration
 
-    def maxgroundlevelconcentration(self, Q, u, sy, sz, h):
-        concentration = (Q / (math.pi * u * sy * sz)) * math.exp(-0.5 * ((h * h) / (sz * sz)))
+    @staticmethod
+    def max_ground_level_concentration(q, u, sy, sz, h):
+        concentration = (q / (math.pi * u * sy * sz)) * math.exp(-0.5 * ((h * h) / (sz * sz)))
         return concentration
+
+
+
+
+
